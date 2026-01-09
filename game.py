@@ -10,9 +10,9 @@ window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Loading image')
 image = pygame.image.load('red_car_small.png')
 track_image = pygame.image.load('race_track.png')
-car_acceleration = 50
+car_acceleration = 500
 distance_between_wheels = 20
-#rotation_speed = 360
+drag = 1 
 
 car_x = (window.get_width() - image.get_width()) / 2
 car_y = (window.get_height() - image.get_height()) / 2
@@ -49,6 +49,9 @@ while running:
         speed += car_acceleration * delta_time
     if keys[pygame.K_DOWN]:    
         speed -= car_acceleration * delta_time
+
+    # Apply drag
+    speed -= drag * speed * delta_time
 
     #position of wheels at start of frame
     back_wheel_x = x - (0.5 * distance_between_wheels * math.sin(rotation * math.pi / 180))
