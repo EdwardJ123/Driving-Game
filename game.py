@@ -10,8 +10,6 @@ window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Loading image')
 image = pygame.image.load('red_car_small.png')
 track_image = pygame.image.load('race_track.png')
-car_scale = 3
-image = pygame.transform.scale(image, (image.get_width() * car_scale, image.get_height() * car_scale))
 car_speed = 1000
 rotation_speed = 360
 
