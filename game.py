@@ -10,19 +10,18 @@ window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Loading image')
 image = pygame.image.load('red_car_small.png')
 track_image = pygame.image.load('race_track.png')
-car_speed = 1000
-rotation_speed = 360
+car_acceleration = 50
+distance_between_wheels = 20
+#rotation_speed = 360
 
 car_x = (window.get_width() - image.get_width()) / 2
 car_y = (window.get_height() - image.get_height()) / 2
 x = track_image.get_width() / 2
 y = track_image.get_height() / 2
 rotation = 0
+speed = 0
+steering_angle = 0
 
-# temp variables for debugging
-prev_track_x = ''
-prev_track_x = ''
-distance = 0
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("Verdana", 20)
 
@@ -41,15 +40,34 @@ while running:
 
     keys = pygame.key.get_pressed()
     if keys[pygame.K_LEFT]:    
-        rotation -= rotation_speed * delta_time
+        steering_angle = -5
     if keys[pygame.K_RIGHT]:    
-        rotation += rotation_speed * delta_time
+        steering_angle = 5
+    if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
+        steering_angle = 0
     if keys[pygame.K_UP]:    
-        x += car_speed * delta_time * math.sin(rotation * math.pi / 180)
-        y -= car_speed * delta_time * math.cos(rotation * math.pi / 180)
+        speed += car_acceleration * delta_time
     if keys[pygame.K_DOWN]:    
-        x -= car_speed * delta_time * math.sin(rotation * math.pi / 180)
-        y += car_speed * delta_time * math.cos(rotation * math.pi / 180)
+        speed -= car_acceleration * delta_time
+
+    #position of wheels at start of frame
+    back_wheel_x = x - (0.5 * distance_between_wheels * math.sin(rotation * math.pi / 180))
+    back_wheel_y = y + (0.5 * distance_between_wheels * math.cos(rotation * math.pi / 180))
+    front_wheel_x = x + (0.5 * distance_between_wheels * math.sin(rotation * math.pi / 180))
+    front_wheel_y = y - (0.5 * distance_between_wheels * math.cos(rotation * math.pi / 180))
+    
+    #positon of wheels at end of frame
+    back_wheel_x += speed * delta_time * math.sin(rotation * math.pi / 180)
+    back_wheel_y -= speed * delta_time * math.cos(rotation * math.pi / 180)
+    front_wheel_x += speed * delta_time * math.sin((rotation + steering_angle) * math.pi / 180)
+    front_wheel_y -= speed * delta_time * math.cos((rotation + steering_angle) * math.pi / 180)
+
+    #new car position
+    x = (back_wheel_x + front_wheel_x) / 2
+    y = (back_wheel_y + front_wheel_y) / 2
+
+    rotation = math.atan2(front_wheel_x - back_wheel_x, back_wheel_y - front_wheel_y) * 180 / math.pi
+
 
     x = max(min(x, track_image.get_width() - SCREEN_WIDTH), SCREEN_WIDTH)
     y = max(min(y, track_image.get_height() - SCREEN_HEIGHT), SCREEN_HEIGHT)
@@ -71,8 +89,20 @@ while running:
     window.blit(image, car_rect)
 
     # Show FPS
-    fps_text = font.render(str(round(clock.get_fps(), 2)), True, (255, 255, 255))
-    window.blit(fps_text, (10, 10))
+    fps_text = font.render("FPS:  " + str(round(clock.get_fps(), 2)), True, (255, 255, 255))
+    window.blit( fps_text, (10, 10))
+
+    # Show Speed
+    speed_text = font.render("SPEED:  " + str(round(speed, 2)), True, (255, 255, 255))
+    window.blit(speed_text, (10, 30))
+
+    # Show Rotation
+    rotation_text = font.render("ROTATION:  " + str(round(rotation, 2)), True, (255, 255, 255))
+    window.blit(rotation_text, (10, 50))
+
+    # Show Steering Angle
+    steering_angle_text = font.render("STEERING ANGLE:  " + str(round(steering_angle, 2)), True, (255, 255, 255))
+    window.blit(steering_angle_text, (10, 70))
 
     # Update the screen
     pygame.display.update()
