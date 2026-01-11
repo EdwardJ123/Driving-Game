@@ -12,7 +12,10 @@ image = pygame.image.load('red_car_small.png')
 track_image = pygame.image.load('race_track.png')
 car_acceleration = 500
 distance_between_wheels = 20
-drag = 1 
+# drag = 1 
+track_drag = 0.5
+grass_drag = 1.5
+sand_drag = 10
 
 car_x = (window.get_width() - image.get_width()) / 2
 car_y = (window.get_height() - image.get_height()) / 2
@@ -49,6 +52,17 @@ while running:
         speed += car_acceleration * delta_time
     if keys[pygame.K_DOWN]:    
         speed -= car_acceleration * delta_time
+
+    # Work out type of surface we're driving on
+    (r, g, b, a) = track_image.get_at((round(x), round(y)))
+    terrain = 'Track'
+    drag = track_drag
+    if g > r + b:
+        terrain = 'Grass'
+        drag = grass_drag
+    elif r > 100 and g > 100 and b < 75:
+        terrain = 'Sand'
+        drag = sand_drag
 
     # Apply drag
     speed -= drag * speed * delta_time
@@ -106,6 +120,10 @@ while running:
     # Show Steering Angle
     steering_angle_text = font.render("STEERING ANGLE:  " + str(round(steering_angle, 2)), True, (255, 255, 255))
     window.blit(steering_angle_text, (10, 70))
+
+    # Show Terrain
+    terrain_text = font.render("Terrain:  " + terrain, True, (255, 255, 255))
+    window.blit(terrain_text, (10, 90))
 
     # Update the screen
     pygame.display.update()
