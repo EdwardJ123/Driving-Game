@@ -12,7 +12,10 @@ image = pygame.image.load('red_car_small.png')
 track_image = pygame.image.load('race_track.png')
 car_acceleration = 500
 distance_between_wheels = 20
-drag = 1 
+track_drag = 0.5
+grass_drag = 1.5
+sand_drag = 10
+
 
 car_x = (window.get_width() - image.get_width()) / 2
 car_y = (window.get_height() - image.get_height()) / 2
@@ -50,6 +53,17 @@ while running:
     if keys[pygame.K_DOWN]:    
         speed -= car_acceleration * delta_time
 
+    # Determine drag based on surface
+    (r, g, b, a) = track_image.get_at((int(x), int(y)))
+    terrain = 'track'
+    drag = track_drag
+    if g > r+10 and g > b+10:
+        terrain = 'grass'
+        drag = grass_drag
+    elif r > b+10 and g > b+10:
+        terrain = 'sand'
+        drag = sand_drag
+    
     # Apply drag
     speed -= drag * speed * delta_time
 
@@ -107,6 +121,11 @@ while running:
     steering_angle_text = font.render("STEERING ANGLE:  " + str(round(steering_angle, 2)), True, (255, 255, 255))
     window.blit(steering_angle_text, (10, 70))
 
+    # Show Terrain 
+    terrain_text = font.render("TERRAIN " + terrain, True, (255, 255, 255))
+    window.blit(terrain_text, (10, 90))
+
+
     # Update the screen
     pygame.display.update()
 
@@ -124,10 +143,10 @@ quit()
 
 
 
-# Background image(s)
+
 # Timer 
-# Collision detection + obstacles and walls
-#Stopping/slowing car leaving track
+# Start and finish line 
+
 
 
 
