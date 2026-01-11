@@ -126,9 +126,7 @@ quit()
 
 # Background image(s)
 # Timer 
-#Basic Physics
 # Collision detection + obstacles and walls
-# Other cars
 #Stopping/slowing car leaving track
 
 
