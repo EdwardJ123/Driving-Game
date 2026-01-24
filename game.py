@@ -27,6 +27,7 @@ speed = 0
 steering_angle = 0
 previous_terrain = 'track'
 lap = 0
+sector = 2
 
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("Verdana", 20)
@@ -69,10 +70,18 @@ while running:
     elif r > b + g:
         terrain = 'start_finish'
         drag = track_drag
+    elif b > r + g:
+        terrain = 'checkpoint'
+        drag = track_drag
 
     # Check if we need to start a new lap
-    if previous_terrain == 'track' and terrain == 'start_finish':
+    if sector == 2 and previous_terrain == 'track' and terrain == 'start_finish':
         lap += 1
+        sector = 1
+
+    # Check if we passed the checkpoint
+    if previous_terrain == 'track' and terrain == 'checkpoint':
+        sector = 2
 
     # Update previous terrain. Any comparisons must be done before this line
     previous_terrain = terrain
@@ -141,6 +150,10 @@ while running:
     # Show Lap Count 
     lap_text = font.render("LAP " + str(lap) + '/' + str(total_laps), True, (255, 255, 255))
     window.blit(lap_text, (10, 110))
+
+    # Show Sector
+    sector_text = font.render("SECTOR " + str(sector), True, (255, 255, 255))
+    window.blit(sector_text, (10, 130))
 
     # Update the screen
     pygame.display.update()
