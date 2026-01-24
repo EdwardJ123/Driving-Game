@@ -15,7 +15,7 @@ distance_between_wheels = 20
 track_drag = 0.5
 grass_drag = 1.5
 sand_drag = 10
-total_laps = 3
+total_laps = 2
 
 
 car_x = (window.get_width() - image.get_width()) / 2
@@ -32,6 +32,9 @@ lap_timing = []
 
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("Verdana", 20)
+heading_font = pygame.font.SysFont("Verdana", 40)
+
+mode = 'racing'
 
 running = True
 while running:
@@ -46,130 +49,154 @@ while running:
                 running = False
                 break
 
-    keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT]:    
-        steering_angle = -5
-    if keys[pygame.K_RIGHT]:    
-        steering_angle = 5
-    if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
-        steering_angle = 0
-    if keys[pygame.K_UP]:    
-        speed += car_acceleration * delta_time
-    if keys[pygame.K_DOWN]:    
-        speed -= car_acceleration * delta_time
+    if mode == 'racing':
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:    
+            steering_angle = -5
+        if keys[pygame.K_RIGHT]:    
+            steering_angle = 5
+        if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
+            steering_angle = 0
+        if keys[pygame.K_UP]:    
+            speed += car_acceleration * delta_time
+        if keys[pygame.K_DOWN]:    
+            speed -= car_acceleration * delta_time
 
-    # Determine drag based on surface
-    (r, g, b, a) = track_image.get_at((int(x), int(y)))
-    terrain = 'track'
-    drag = track_drag
-    if g > r+10 and g > b+10:
-        terrain = 'grass'
-        drag = grass_drag
-    elif r > b+10 and g > b+10:
-        terrain = 'sand'
-        drag = sand_drag
-    elif r > b + g:
-        terrain = 'start_finish'
+        # Determine drag based on surface
+        (r, g, b, a) = track_image.get_at((int(x), int(y)))
+        terrain = 'track'
         drag = track_drag
-    elif b > r + g:
-        terrain = 'checkpoint'
-        drag = track_drag
+        if g > r+10 and g > b+10:
+            terrain = 'grass'
+            drag = grass_drag
+        elif r > b+10 and g > b+10:
+            terrain = 'sand'
+            drag = sand_drag
+        elif r > b + g:
+            terrain = 'start_finish'
+            drag = track_drag
+        elif b > r + g:
+            terrain = 'checkpoint'
+            drag = track_drag
 
-    # Update lap time
-    if len(lap_timing) > 0:
-        lap_timing[-1] += delta_time
+        # Update lap time
+        if len(lap_timing) > 0:
+            lap_timing[-1] += delta_time
 
-    # Check if we need to start a new lap
-    if sector == 2 and previous_terrain == 'track' and terrain == 'start_finish':
-        lap += 1
-        sector = 1
-        lap_timing.append(0)
-        print(f"lap_timing {lap_timing}")
+        # Check if we need to start a new lap
+        if sector == 2 and previous_terrain == 'track' and terrain == 'start_finish':
+            lap += 1
+            sector = 1
+            if lap > total_laps:
+                mode = 'finished'
+                continue
+            lap_timing.append(0)
 
-    # Check if we passed the checkpoint
-    if previous_terrain == 'track' and terrain == 'checkpoint':
-        sector = 2
+        # Check if we passed the checkpoint
+        if previous_terrain == 'track' and terrain == 'checkpoint':
+            sector = 2
 
-    # Update previous terrain. Any comparisons must be done before this line
-    previous_terrain = terrain
-    
-    # Apply drag
-    speed -= drag * speed * delta_time
+        # Update previous terrain. Any comparisons must be done before this line
+        previous_terrain = terrain
+        
+        # Apply drag
+        speed -= drag * speed * delta_time
 
-    #position of wheels at start of frame
-    back_wheel_x = x - (0.5 * distance_between_wheels * math.sin(rotation * math.pi / 180))
-    back_wheel_y = y + (0.5 * distance_between_wheels * math.cos(rotation * math.pi / 180))
-    front_wheel_x = x + (0.5 * distance_between_wheels * math.sin(rotation * math.pi / 180))
-    front_wheel_y = y - (0.5 * distance_between_wheels * math.cos(rotation * math.pi / 180))
-    
-    #positon of wheels at end of frame
-    back_wheel_x += speed * delta_time * math.sin(rotation * math.pi / 180)
-    back_wheel_y -= speed * delta_time * math.cos(rotation * math.pi / 180)
-    front_wheel_x += speed * delta_time * math.sin((rotation + steering_angle) * math.pi / 180)
-    front_wheel_y -= speed * delta_time * math.cos((rotation + steering_angle) * math.pi / 180)
+        #position of wheels at start of frame
+        back_wheel_x = x - (0.5 * distance_between_wheels * math.sin(rotation * math.pi / 180))
+        back_wheel_y = y + (0.5 * distance_between_wheels * math.cos(rotation * math.pi / 180))
+        front_wheel_x = x + (0.5 * distance_between_wheels * math.sin(rotation * math.pi / 180))
+        front_wheel_y = y - (0.5 * distance_between_wheels * math.cos(rotation * math.pi / 180))
+        
+        #positon of wheels at end of frame
+        back_wheel_x += speed * delta_time * math.sin(rotation * math.pi / 180)
+        back_wheel_y -= speed * delta_time * math.cos(rotation * math.pi / 180)
+        front_wheel_x += speed * delta_time * math.sin((rotation + steering_angle) * math.pi / 180)
+        front_wheel_y -= speed * delta_time * math.cos((rotation + steering_angle) * math.pi / 180)
 
-    #new car position
-    x = (back_wheel_x + front_wheel_x) / 2
-    y = (back_wheel_y + front_wheel_y) / 2
+        #new car position
+        x = (back_wheel_x + front_wheel_x) / 2
+        y = (back_wheel_y + front_wheel_y) / 2
 
-    rotation = math.atan2(front_wheel_x - back_wheel_x, back_wheel_y - front_wheel_y) * 180 / math.pi
-
-
-    x = max(min(x, track_image.get_width() - SCREEN_WIDTH), SCREEN_WIDTH)
-    y = max(min(y, track_image.get_height() - SCREEN_HEIGHT), SCREEN_HEIGHT)
+        rotation = math.atan2(front_wheel_x - back_wheel_x, back_wheel_y - front_wheel_y) * 180 / math.pi
 
 
-    # Get relevant part of map, rotate it and draw it to the screen
-    center = (x, y)
-    dimensions = (SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2)
-    smaller_rect = pygame.Rect(center, dimensions)
-    smaller_rect.center = center
-    smaller_track_image = track_image.subsurface(smaller_rect)
-    rotated_smaller_track_image = pygame.transform.rotate(smaller_track_image, rotation)
-    rotated_smaller_track_rect = rotated_smaller_track_image.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
-    window.fill((0, 0, 0))
-    window.blit(rotated_smaller_track_image, rotated_smaller_track_rect)
+        x = max(min(x, track_image.get_width() - SCREEN_WIDTH), SCREEN_WIDTH)
+        y = max(min(y, track_image.get_height() - SCREEN_HEIGHT), SCREEN_HEIGHT)
 
-    # Draw the car
-    car_rect = image.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
-    window.blit(image, car_rect)
 
-    # Show FPS
-    fps_text = font.render("FPS:  " + str(round(clock.get_fps(), 2)), True, (255, 255, 255))
-    window.blit( fps_text, (10, 10))
+        # Get relevant part of map, rotate it and draw it to the screen
+        center = (x, y)
+        dimensions = (SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2)
+        smaller_rect = pygame.Rect(center, dimensions)
+        smaller_rect.center = center
+        smaller_track_image = track_image.subsurface(smaller_rect)
+        rotated_smaller_track_image = pygame.transform.rotate(smaller_track_image, rotation)
+        rotated_smaller_track_rect = rotated_smaller_track_image.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+        window.fill((0, 0, 0))
+        window.blit(rotated_smaller_track_image, rotated_smaller_track_rect)
 
-    # Show Speed
-    speed_text = font.render("SPEED:  " + str(round(speed, 2)), True, (255, 255, 255))
-    window.blit(speed_text, (10, 30))
+        # Draw the car
+        car_rect = image.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+        window.blit(image, car_rect)
 
-    # Show Rotation
-    rotation_text = font.render("ROTATION:  " + str(round(rotation, 2)), True, (255, 255, 255))
-    window.blit(rotation_text, (10, 50))
+        # Show FPS
+        fps_text = font.render("FPS:  " + str(round(clock.get_fps(), 2)), True, (255, 255, 255))
+        window.blit( fps_text, (10, 10))
 
-    # Show Steering Angle
-    steering_angle_text = font.render("STEERING ANGLE:  " + str(round(steering_angle, 2)), True, (255, 255, 255))
-    window.blit(steering_angle_text, (10, 70))
+        # Show Speed
+        speed_text = font.render("SPEED:  " + str(round(speed, 2)), True, (255, 255, 255))
+        window.blit(speed_text, (10, 30))
 
-    # Show Terrain 
-    terrain_text = font.render("TERRAIN " + terrain, True, (255, 255, 255))
-    window.blit(terrain_text, (10, 90))
+        # Show Rotation
+        rotation_text = font.render("ROTATION:  " + str(round(rotation, 2)), True, (255, 255, 255))
+        window.blit(rotation_text, (10, 50))
 
-    # Show Lap Count 
-    lap_text = font.render("LAP " + str(lap) + '/' + str(total_laps), True, (255, 255, 255))
-    window.blit(lap_text, (10, 110))
+        # Show Steering Angle
+        steering_angle_text = font.render("STEERING ANGLE:  " + str(round(steering_angle, 2)), True, (255, 255, 255))
+        window.blit(steering_angle_text, (10, 70))
 
-    # Show Sector
-    sector_text = font.render("SECTOR " + str(sector), True, (255, 255, 255))
-    window.blit(sector_text, (10, 130))
+        # Show Terrain 
+        terrain_text = font.render("TERRAIN " + terrain, True, (255, 255, 255))
+        window.blit(terrain_text, (10, 90))
 
-    # Show Lap Times
-    for i, time in enumerate(lap_timing):
-        minutes = math.floor(time / 60)
-        seconds = round(time % 60)
-        thousandths = round((time - math.floor(time)) * 1000)
-        lap_time_str = str(minutes).zfill(2) + ":" + str(seconds).zfill(2) + '.' + str(thousandths)
-        text = font.render(str(i+1) + " - " + lap_time_str, True, (255, 255, 255))
-        window.blit(text, (10, 150 + i * 20))
+        # Show Lap Count 
+        lap_text = font.render("LAP " + str(lap) + '/' + str(total_laps), True, (255, 255, 255))
+        window.blit(lap_text, (10, 110))
+
+        # Show Sector
+        sector_text = font.render("SECTOR " + str(sector), True, (255, 255, 255))
+        window.blit(sector_text, (10, 130))
+
+        # Show Lap Times
+        for i, time in enumerate(lap_timing):
+            minutes = math.floor(time / 60)
+            seconds = round(time % 60)
+            thousandths = round((time - math.floor(time)) * 1000)
+            lap_time_str = str(minutes).zfill(2) + ":" + str(seconds).zfill(2) + '.' + str(thousandths)
+            text = font.render(str(i+1) + " - " + lap_time_str, True, (255, 255, 255))
+            window.blit(text, (10, 150 + i * 20))
+    elif mode == 'finished':
+        window.fill((0, 0, 0))
+        heading = heading_font.render("Time Trial Complete!", True, (255, 255, 255))
+        window.blit(heading, (100, 200))
+        window.blit(font.render("Lap Times:", True, (255, 255, 255)), (100, 260))
+        # TODO: dont' copy / paste code!
+        for i, time in enumerate(lap_timing):
+            minutes = math.floor(time / 60)
+            seconds = round(time % 60)
+            thousandths = round((time - math.floor(time)) * 1000)
+            lap_time_str = str(minutes).zfill(2) + ":" + str(seconds).zfill(2) + '.' + str(thousandths)
+            text = font.render(str(i+1) + " - " + lap_time_str, True, (255, 255, 255))
+            window.blit(text, (100, 290 + i * 20))
+        window.blit(font.render("------------------------", True, (255, 255, 255)), (100, 290 + total_laps * 20))
+        total_time = sum(lap_timing)
+        minutes = math.floor(total_time / 60)
+        seconds = round(total_time % 60)
+        thousandths = round((total_time - math.floor(total_time)) * 1000)
+        total_time_str = str(minutes).zfill(2) + ":" + str(seconds).zfill(2) + '.' + str(thousandths)
+        text = font.render("Overall time - " + total_time_str, True, (255, 255, 255))
+        window.blit(text, (100, 310 + total_laps * 20))
 
     # Update the screen
     pygame.display.update()
