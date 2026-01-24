@@ -15,6 +15,7 @@ distance_between_wheels = 20
 track_drag = 0.5
 grass_drag = 1.5
 sand_drag = 10
+total_laps = 3
 
 
 car_x = (window.get_width() - image.get_width()) / 2
@@ -24,6 +25,8 @@ y = track_image.get_height() / 2
 rotation = 0
 speed = 0
 steering_angle = 0
+previous_terrain = 'track'
+lap = 0
 
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("Verdana", 20)
@@ -63,6 +66,16 @@ while running:
     elif r > b+10 and g > b+10:
         terrain = 'sand'
         drag = sand_drag
+    elif r > b + g:
+        terrain = 'start_finish'
+        drag = track_drag
+
+    # Check if we need to start a new lap
+    if previous_terrain == 'track' and terrain == 'start_finish':
+        lap += 1
+
+    # Update previous terrain. Any comparisons must be done before this line
+    previous_terrain = terrain
     
     # Apply drag
     speed -= drag * speed * delta_time
@@ -125,17 +138,12 @@ while running:
     terrain_text = font.render("TERRAIN " + terrain, True, (255, 255, 255))
     window.blit(terrain_text, (10, 90))
 
+    # Show Lap Count 
+    lap_text = font.render("LAP " + str(lap) + '/' + str(total_laps), True, (255, 255, 255))
+    window.blit(lap_text, (10, 110))
 
     # Update the screen
     pygame.display.update()
-
-    
-
-
-
-
-
-
 
 pygame.quit()
 quit()
