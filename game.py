@@ -28,6 +28,7 @@ steering_angle = 0
 previous_terrain = 'track'
 lap = 0
 sector = 2
+lap_timing = []
 
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("Verdana", 20)
@@ -74,10 +75,16 @@ while running:
         terrain = 'checkpoint'
         drag = track_drag
 
+    # Update lap time
+    if len(lap_timing) > 0:
+        lap_timing[-1] += delta_time
+
     # Check if we need to start a new lap
     if sector == 2 and previous_terrain == 'track' and terrain == 'start_finish':
         lap += 1
         sector = 1
+        lap_timing.append(0)
+        print(f"lap_timing {lap_timing}")
 
     # Check if we passed the checkpoint
     if previous_terrain == 'track' and terrain == 'checkpoint':
@@ -154,6 +161,15 @@ while running:
     # Show Sector
     sector_text = font.render("SECTOR " + str(sector), True, (255, 255, 255))
     window.blit(sector_text, (10, 130))
+
+    # Show Lap Times
+    for i, time in enumerate(lap_timing):
+        minutes = math.floor(time / 60)
+        seconds = round(time % 60)
+        thousandths = round((time - math.floor(time)) * 1000)
+        lap_time_str = str(minutes).zfill(2) + ":" + str(seconds).zfill(2) + '.' + str(thousandths)
+        text = font.render(str(i+1) + " - " + lap_time_str, True, (255, 255, 255))
+        window.blit(text, (10, 150 + i * 20))
 
     # Update the screen
     pygame.display.update()
