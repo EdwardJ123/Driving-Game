@@ -16,7 +16,7 @@ track_drag = 0.5
 grass_drag = 1.5
 sand_drag = 10
 max_laps = 5
-
+sector = 2
 
 car_x = (window.get_width() - image.get_width()) / 2
 car_y = (window.get_height() - image.get_height()) / 2
@@ -70,6 +70,9 @@ while running:
     elif r > g + 10 and r > b + 10:
         terrain = 'start_line'
         drag = track_drag
+    elif b > r + g:
+        terrain = 'checkpoint'
+        drag = track_drag
     
     # Apply drag
     speed -= drag * speed * delta_time
@@ -110,8 +113,12 @@ while running:
 
 
     # Check for lap completion
-    if previous_terrain == 'start_line' and terrain == 'track':
-        laps += 1 
+    if previous_terrain == 'start_line' and terrain == 'track' and sector == 2:
+        laps += 1
+        sector = 1
+
+    if previous_terrain == 'checkpoint' and terrain == 'track':
+        sector = 2
     previous_terrain = terrain
 
     # Draw the car
@@ -141,6 +148,10 @@ while running:
     # Show Laps
     laps_text = font.render("LAPS " + str(laps) + "/" + str(max_laps), True, (255, 255, 255))
     window.blit(laps_text, (10, 110))
+
+    # Show Sector
+    sector_text = font.render("SECTOR " + str(sector), True, (255, 255, 255))
+    window.blit(sector_text, (10, 130))
 
     # Update the screen
     pygame.display.update()
