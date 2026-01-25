@@ -15,6 +15,7 @@ distance_between_wheels = 20
 track_drag = 0.5
 grass_drag = 1.5
 sand_drag = 10
+max_laps = 5
 
 
 car_x = (window.get_width() - image.get_width()) / 2
@@ -24,6 +25,9 @@ y = track_image.get_height() / 2
 rotation = 0
 speed = 0
 steering_angle = 0
+laps = 0
+previous_terrain = 'track'
+
 
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("Verdana", 20)
@@ -63,6 +67,9 @@ while running:
     elif r > b+10 and g > b+10:
         terrain = 'sand'
         drag = sand_drag
+    elif r > g + 10 and r > b + 10:
+        terrain = 'start_line'
+        drag = track_drag
     
     # Apply drag
     speed -= drag * speed * delta_time
@@ -101,6 +108,12 @@ while running:
     window.fill((0, 0, 0))
     window.blit(rotated_smaller_track_image, rotated_smaller_track_rect)
 
+
+    # Check for lap completion
+    if previous_terrain == 'start_line' and terrain == 'track':
+        laps += 1 
+    previous_terrain = terrain
+
     # Draw the car
     car_rect = image.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
     window.blit(image, car_rect)
@@ -125,6 +138,9 @@ while running:
     terrain_text = font.render("TERRAIN " + terrain, True, (255, 255, 255))
     window.blit(terrain_text, (10, 90))
 
+    # Show Laps
+    laps_text = font.render("LAPS " + str(laps) + "/" + str(max_laps), True, (255, 255, 255))
+    window.blit(laps_text, (10, 110))
 
     # Update the screen
     pygame.display.update()
