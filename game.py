@@ -27,7 +27,7 @@ speed = 0
 steering_angle = 0
 laps = 0
 previous_terrain = 'track'
-
+lap_times = []
 
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("Verdana", 20)
@@ -116,10 +116,15 @@ while running:
     if previous_terrain == 'start_line' and terrain == 'track' and sector == 2:
         laps += 1
         sector = 1
+        lap_times.append(0)
+
 
     if previous_terrain == 'checkpoint' and terrain == 'track':
         sector = 2
     previous_terrain = terrain
+
+    if len(lap_times) > 0:
+        lap_times[-1] += delta_time
 
     # Draw the car
     car_rect = image.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
@@ -153,17 +158,18 @@ while running:
     sector_text = font.render("SECTOR " + str(sector), True, (255, 255, 255))
     window.blit(sector_text, (10, 130))
 
+    # Show Lap Times
+    for i, time in enumerate(lap_times):
+        minutes = math.floor(time/60)
+        seconds = round(time%60)
+        milliseconds = round((time - math.floor(time)) * 1000)
+        lap_time_text = font.render(str(i+1) + ' - ' + str(minutes).zfill(2) + ':' + str(seconds).zfill(2) + '.' + str(milliseconds).zfill(3) , True , (255, 255, 255))
+        window.blit(lap_time_text, (10,170 + i * 20))
+
     # Update the screen
     pygame.display.update()
 
     
-
-
-
-
-
-
-
 pygame.quit()
 quit()
 
