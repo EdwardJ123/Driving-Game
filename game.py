@@ -10,7 +10,8 @@ DEBUG = False
 pygame.init()
 window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Speed')
-image = pygame.image.load('red_car_small.png')
+title_screen_image = pygame.image.load('Title Screen.png')
+car_image = pygame.image.load('red_car_small.png')
 track_image = pygame.image.load('race_track.png')
 car_acceleration = 500
 distance_between_wheels = 20
@@ -20,8 +21,8 @@ sand_drag = 10
 max_laps = 5
 sector = 2
 
-car_x = (window.get_width() - image.get_width()) / 2
-car_y = (window.get_height() - image.get_height()) / 2
+car_x = (window.get_width() - car_image.get_width()) / 2
+car_y = (window.get_height() - car_image.get_height()) / 2
 x = track_image.get_width() / 2
 y = track_image.get_height() / 2
 rotation = 0
@@ -34,30 +35,38 @@ lap_times = []
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("Verdana", 20)
 
-running = True
-while running:
+state = 'title screen'
+
+
+while state != 'quit':
+    
+    
     delta_time = clock.tick(TARGET_FPS) / 1000.0
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            running = False 
+            state = 'quit' 
             break
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                running = False
-                break
+            if state == 'running':
+                if event.key == pygame.K_ESCAPE:
+                    state = 'title screen'
+                    break
+            elif state == 'title screen':
+                state = 'running'
 
     keys = pygame.key.get_pressed()
-    if keys[pygame.K_LEFT]:    
-        steering_angle = -5
-    if keys[pygame.K_RIGHT]:    
-        steering_angle = 5
-    if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
-        steering_angle = 0
-    if keys[pygame.K_UP]:    
-        speed += car_acceleration * delta_time
-    if keys[pygame.K_DOWN]:    
-        speed -= car_acceleration * delta_time
+    if state == 'running':
+        if keys[pygame.K_LEFT]:    
+            steering_angle = -5
+        if keys[pygame.K_RIGHT]:    
+            steering_angle = 5
+        if not keys[pygame.K_LEFT] and not keys[pygame.K_RIGHT]:
+            steering_angle = 0
+        if keys[pygame.K_UP]:    
+            speed += car_acceleration * delta_time
+        if keys[pygame.K_DOWN]:    
+            speed -= car_acceleration * delta_time
 
     # Determine drag based on surface
     (r, g, b, a) = track_image.get_at((int(x), int(y)))
@@ -129,8 +138,8 @@ while running:
         lap_times[-1] += delta_time
 
     # Draw the car
-    car_rect = image.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
-    window.blit(image, car_rect)
+    car_rect = car_image.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+    window.blit(car_image, car_rect)
 
     # Show Laps
     laps_text = font.render("LAPS " + str(laps) + "/" + str(max_laps), True, (255, 255, 255))
@@ -169,6 +178,10 @@ while running:
         milliseconds = round((time - math.floor(time)) * 1000)
         lap_time_text = font.render(str(i+1) + ' - ' + str(minutes).zfill(2) + ':' + str(seconds).zfill(2) + '.' + str(milliseconds).zfill(3) , True , (255, 255, 255))
         window.blit(lap_time_text, (10,170 + i * 20))
+
+    if state == 'title screen':
+        title_screen_rect = title_screen_image.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+        window.blit(title_screen_image, title_screen_rect)
 
     # Update the screen
     pygame.display.update()

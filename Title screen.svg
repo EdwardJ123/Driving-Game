@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="800"
+   height="600"
+   viewBox="0 0 211.66666 158.75"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   sodipodi:docname="Title screen.svg"
+   inkscape:export-filename="Title Screen.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.0845591"
+     inkscape:cx="368.35245"
+     inkscape:cy="297.81688"
+     inkscape:window-width="1470"
+     inkscape:window-height="919"
+     inkscape:window-x="0"
+     inkscape:window-y="37"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="g5" />
+  <defs
+     id="defs1">
+    <rect
+       x="128.16268"
+       y="52.555919"
+       width="231.88244"
+       height="178.87453"
+       id="rect4" />
+    <rect
+       x="296.89484"
+       y="164.12199"
+       width="256.32536"
+       height="51.633886"
+       id="rect2" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g4">
+      <g
+         id="g5"
+         transform="translate(-9.801211)">
+        <rect
+           style="opacity:0.9;fill:#a1a1a1;fill-opacity:1;stroke-width:0.329757"
+           id="rect1"
+           width="113.68291"
+           height="77.333649"
+           x="58.793091"
+           y="41.472305" />
+        <text
+           xml:space="preserve"
+           transform="scale(0.26458333)"
+           id="text1"
+           style="writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect2);display:inline;opacity:0.5;fill:#a1a1a1;fill-opacity:1" />
+        <text
+           xml:space="preserve"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:16.9333px;font-family:Impact;-inkscape-font-specification:'Impact Condensed';writing-mode:lr-tb;direction:ltr;opacity:1;fill:#f20d0d;fill-opacity:1;stroke-width:0.264583"
+           x="92.954796"
+           y="62.448822"
+           id="text3"><tspan
+             sodipodi:role="line"
+             id="tspan3"
+             style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:16.9333px;font-family:Impact;-inkscape-font-specification:'Impact Condensed';fill:#f20d0d;fill-opacity:1;stroke-width:0.264583"
+             x="92.954796"
+             y="62.448822">SPEED!</tspan></text>
+        <text
+           xml:space="preserve"
+           transform="matrix(0.3002501,0,0,0.26458333,42.342264,60.632391)"
+           id="text4"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:condensed;font-size:17.5229px;font-family:Impact;-inkscape-font-specification:'Impact Condensed';text-align:center;writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect4);display:inline;opacity:1;fill:#f32222;fill-opacity:1"
+           x="276.81723"
+           y="0"><tspan
+             x="133.40582"
+             y="70.098504"
+             id="tspan1">This is my racing game SPEED!
+</tspan><tspan
+             x="133.50732"
+             y="92.00213"
+             id="tspan2">Race around the track by using </tspan><tspan
+             x="156.53297"
+             y="113.90576"
+             id="tspan5">the arrow keys to move.
+</tspan><tspan
+             x="165.94779"
+             y="135.80938"
+             id="tspan6">Press any key to start.</tspan></text>
+      </g>
+    </g>
+  </g>
+</svg>
