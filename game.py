@@ -10,6 +10,7 @@ DEBUG = False
 pygame.init()
 window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Speed!')
+
 title_screen_image = pygame.image.load('Title Screen.png')
 finish_screen_image = pygame.image.load('finish_screen.png')
 car_image = pygame.image.load('red_car_small.png')
@@ -20,7 +21,6 @@ track_drag = 0.5
 grass_drag = 1.5
 sand_drag = 10
 max_laps = 3
-
 
 def init_game_state():
     global car_x, car_y, x, y, rotation, speed, steering_angle, laps, sector, previous_terrain, lap_times, running_time
@@ -51,6 +51,7 @@ clock = pygame.time.Clock()
 font = pygame.font.SysFont("Verdana", 20)
 
 while state != 'quit':
+    # Time elapsed since the previous frame
     delta_time = clock.tick(TARGET_FPS) / 1000.0
 
     for event in pygame.event.get():
@@ -100,19 +101,19 @@ while state != 'quit':
     # Apply drag
     speed -= drag * speed * delta_time
 
-    #position of wheels at start of frame
+    # position of wheels at start of frame
     back_wheel_x = x - (0.5 * distance_between_wheels * math.sin(rotation * math.pi / 180))
     back_wheel_y = y + (0.5 * distance_between_wheels * math.cos(rotation * math.pi / 180))
     front_wheel_x = x + (0.5 * distance_between_wheels * math.sin(rotation * math.pi / 180))
     front_wheel_y = y - (0.5 * distance_between_wheels * math.cos(rotation * math.pi / 180))
     
-    #positon of wheels at end of frame
+    # positon of wheels at end of frame
     back_wheel_x += speed * delta_time * math.sin(rotation * math.pi / 180)
     back_wheel_y -= speed * delta_time * math.cos(rotation * math.pi / 180)
     front_wheel_x += speed * delta_time * math.sin((rotation + steering_angle) * math.pi / 180)
     front_wheel_y -= speed * delta_time * math.cos((rotation + steering_angle) * math.pi / 180)
 
-    #new car position
+    # new car position
     x = (back_wheel_x + front_wheel_x) / 2
     y = (back_wheel_y + front_wheel_y) / 2
 
@@ -134,7 +135,6 @@ while state != 'quit':
     window.fill((0, 0, 0))
     window.blit(rotated_smaller_track_image, rotated_smaller_track_rect)
 
-
     # Check for lap completion
     if previous_terrain == 'start_line' and terrain == 'track' and sector == 2:
         laps += 1
@@ -144,9 +144,9 @@ while state != 'quit':
         else:
             lap_times.append(0)
 
-
     if previous_terrain == 'checkpoint' and terrain == 'track':
         sector = 2
+
     previous_terrain = terrain
 
     if len(lap_times) > 0 and state == 'running':
@@ -186,7 +186,6 @@ while state != 'quit':
         terrain_text = font.render("TERRAIN " + terrain, True, (255, 255, 255))
         window.blit(terrain_text, (10, 230))
 
-
     # Show Lap Times
     for i, time in enumerate(lap_times):
         lap_time_text = font.render(str(i+1) + ' - ' + format_time(time), True , (255, 255, 255))
@@ -211,10 +210,8 @@ while state != 'quit':
         instructions_text = font.render("Press ESC to return to title screen", True, (242, 13, 13))
         window.blit(instructions_text, (235, 370))
 
-
     # Update the screen
     pygame.display.update()
-
     
 pygame.quit()
 quit()
