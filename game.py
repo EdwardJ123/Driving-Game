@@ -155,23 +155,23 @@ while state != 'quit':
     if DEBUG:
         # Show FPS
         fps_text = font.render("FPS:  " + str(round(clock.get_fps(), 2)), True, (255, 255, 255))
-        window.blit( fps_text, (10, 50))
+        window.blit( fps_text, (10, 150))
 
         # Show Speed
         speed_text = font.render("SPEED:  " + str(round(speed, 2)), True, (255, 255, 255))
-        window.blit(speed_text, (10, 70))
+        window.blit(speed_text, (10, 170))
 
         # Show Rotation
         rotation_text = font.render("ROTATION:  " + str(round(rotation, 2)), True, (255, 255, 255))
-        window.blit(rotation_text, (10, 90))
+        window.blit(rotation_text, (10, 190))
 
         # Show Steering Angle
         steering_angle_text = font.render("STEERING ANGLE:  " + str(round(steering_angle, 2)), True, (255, 255, 255))
-        window.blit(steering_angle_text, (10, 110))
+        window.blit(steering_angle_text, (10, 210))
 
         # Show Terrain 
         terrain_text = font.render("TERRAIN " + terrain, True, (255, 255, 255))
-        window.blit(terrain_text, (10, 130))
+        window.blit(terrain_text, (10, 230))
 
 
     # Show Lap Times
@@ -180,7 +180,7 @@ while state != 'quit':
         seconds = round(time%60)
         milliseconds = round((time - math.floor(time)) * 1000)
         lap_time_text = font.render(str(i+1) + ' - ' + str(minutes).zfill(2) + ':' + str(seconds).zfill(2) + '.' + str(milliseconds).zfill(3) , True , (255, 255, 255))
-        window.blit(lap_time_text, (10,170 + i * 20))
+        window.blit(lap_time_text, (10,50 + i * 20))
 
     if state == 'title screen':
         title_screen_rect = title_screen_image.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
