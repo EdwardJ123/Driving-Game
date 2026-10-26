@@ -9,7 +9,7 @@ DEBUG = False
 
 pygame.init()
 window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption('Speed')
+pygame.display.set_caption('Speed!')
 title_screen_image = pygame.image.load('Title Screen.png')
 finish_screen_image = pygame.image.load('finish_screen.png')
 car_image = pygame.image.load('red_car_small.png')
