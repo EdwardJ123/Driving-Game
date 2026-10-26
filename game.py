@@ -19,28 +19,30 @@ track_drag = 0.5
 grass_drag = 1.5
 sand_drag = 10
 max_laps = 5
-sector = 2
 
-car_x = (window.get_width() - car_image.get_width()) / 2
-car_y = (window.get_height() - car_image.get_height()) / 2
-x = track_image.get_width() / 2
-y = track_image.get_height() / 2
-rotation = 0
-speed = 0
-steering_angle = 0
-laps = 0
-previous_terrain = 'track'
-lap_times = []
+
+def init_game_state():
+    global car_x, car_y, x, y, rotation, speed, steering_angle, laps, sector, previous_terrain, lap_times
+    car_x = (window.get_width() - car_image.get_width()) / 2
+    car_y = (window.get_height() - car_image.get_height()) / 2
+    x = track_image.get_width() / 2
+    y = track_image.get_height() / 2
+    rotation = 0
+    speed = 0
+    steering_angle = 0
+    laps = 0
+    sector = 2
+    previous_terrain = 'track'
+    lap_times = []
+
+init_game_state()
+
+state = 'title screen'
 
 clock = pygame.time.Clock()
 font = pygame.font.SysFont("Verdana", 20)
 
-state = 'title screen'
-
-
 while state != 'quit':
-    
-    
     delta_time = clock.tick(TARGET_FPS) / 1000.0
 
     for event in pygame.event.get():
@@ -53,6 +55,7 @@ while state != 'quit':
                     state = 'title screen'
                     break
             elif state == 'title screen':
+                init_game_state()
                 state = 'running'
 
     keys = pygame.key.get_pressed()
@@ -189,8 +192,6 @@ while state != 'quit':
     
 pygame.quit()
 quit()
-
-
 
 
 
