@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="800"
+   height="600"
+   viewBox="0 0 211.66666 158.75"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.4 (dcaf3e7, 2026-05-05)"
+   sodipodi:docname="Finish_screen.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.081645"
+     inkscape:cx="360.09966"
+     inkscape:cy="301.39279"
+     inkscape:window-width="1470"
+     inkscape:window-height="891"
+     inkscape:window-x="0"
+     inkscape:window-y="65"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <rect
+       x="303.29438"
+       y="189.9133"
+       width="283.4527"
+       height="164.40256"
+       id="rect2" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <rect
+       style="opacity:0.9;fill:#a1a1a1;fill-opacity:1;stroke-width:0.219574;stroke-dasharray:none"
+       id="rect1"
+       width="113.683"
+       height="77.334"
+       x="48.991833"
+       y="41.472" />
+    <text
+       xml:space="preserve"
+       transform="matrix(0.26458333,0,0,0.26458333,1.1952772,0)"
+       id="text1"
+       style="font-stretch:condensed;font-size:64px;font-family:Impact;-inkscape-font-specification:'Impact Condensed';writing-mode:lr-tb;direction:ltr;white-space:pre;shape-inside:url(#rect2);opacity:1;fill:#f20d0d;fill-opacity:1;stroke-width:1.00157;stroke-dasharray:none"><tspan
+         x="303.29492"
+         y="253.98333"
+         id="tspan1">FINISH!</tspan></text>
+  </g>
+</svg>

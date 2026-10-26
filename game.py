@@ -11,6 +11,7 @@ pygame.init()
 window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Speed')
 title_screen_image = pygame.image.load('Title Screen.png')
+finish_screen_image = pygame.image.load('finish_screen.png')
 car_image = pygame.image.load('red_car_small.png')
 track_image = pygame.image.load('race_track.png')
 car_acceleration = 500
@@ -18,11 +19,11 @@ distance_between_wheels = 20
 track_drag = 0.5
 grass_drag = 1.5
 sand_drag = 10
-max_laps = 5
+max_laps = 3
 
 
 def init_game_state():
-    global car_x, car_y, x, y, rotation, speed, steering_angle, laps, sector, previous_terrain, lap_times
+    global car_x, car_y, x, y, rotation, speed, steering_angle, laps, sector, previous_terrain, lap_times, running_time
     car_x = (window.get_width() - car_image.get_width()) / 2
     car_y = (window.get_height() - car_image.get_height()) / 2
     x = track_image.get_width() / 2
@@ -34,6 +35,13 @@ def init_game_state():
     sector = 2
     previous_terrain = 'track'
     lap_times = []
+    running_time = 0
+
+def format_time(time):
+    minutes = math.floor(time/60)
+    seconds = math.floor(time%60)
+    milliseconds = round((time - math.floor(time)) * 1000)
+    return str(minutes).zfill(2) + ':' + str(seconds).zfill(2) + '.' + str(milliseconds).zfill(3)
 
 init_game_state()
 
@@ -50,13 +58,14 @@ while state != 'quit':
             state = 'quit' 
             break
         elif event.type == pygame.KEYDOWN:
-            if state == 'running':
+            if state == 'running' or state == 'finish_screen':
                 if event.key == pygame.K_ESCAPE:
                     state = 'title screen'
                     break
             elif state == 'title screen':
                 init_game_state()
                 state = 'running'
+    
 
     keys = pygame.key.get_pressed()
     if state == 'running':
@@ -130,15 +139,19 @@ while state != 'quit':
     if previous_terrain == 'start_line' and terrain == 'track' and sector == 2:
         laps += 1
         sector = 1
-        lap_times.append(0)
+        if laps > max_laps:
+            state = 'finish_screen'
+        else:
+            lap_times.append(0)
 
 
     if previous_terrain == 'checkpoint' and terrain == 'track':
         sector = 2
     previous_terrain = terrain
 
-    if len(lap_times) > 0:
+    if len(lap_times) > 0 and state == 'running':
         lap_times[-1] += delta_time
+        running_time += delta_time
 
     # Draw the car
     car_rect = car_image.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
@@ -155,19 +168,19 @@ while state != 'quit':
     if DEBUG:
         # Show FPS
         fps_text = font.render("FPS:  " + str(round(clock.get_fps(), 2)), True, (255, 255, 255))
-        window.blit( fps_text, (10, 150))
+        window.blit( fps_text, (10, 130))
 
         # Show Speed
         speed_text = font.render("SPEED:  " + str(round(speed, 2)), True, (255, 255, 255))
-        window.blit(speed_text, (10, 170))
+        window.blit(speed_text, (10, 150))
 
         # Show Rotation
         rotation_text = font.render("ROTATION:  " + str(round(rotation, 2)), True, (255, 255, 255))
-        window.blit(rotation_text, (10, 190))
+        window.blit(rotation_text, (10, 170))
 
         # Show Steering Angle
         steering_angle_text = font.render("STEERING ANGLE:  " + str(round(steering_angle, 2)), True, (255, 255, 255))
-        window.blit(steering_angle_text, (10, 210))
+        window.blit(steering_angle_text, (10, 190))
 
         # Show Terrain 
         terrain_text = font.render("TERRAIN " + terrain, True, (255, 255, 255))
@@ -176,15 +189,28 @@ while state != 'quit':
 
     # Show Lap Times
     for i, time in enumerate(lap_times):
-        minutes = math.floor(time/60)
-        seconds = round(time%60)
-        milliseconds = round((time - math.floor(time)) * 1000)
-        lap_time_text = font.render(str(i+1) + ' - ' + str(minutes).zfill(2) + ':' + str(seconds).zfill(2) + '.' + str(milliseconds).zfill(3) , True , (255, 255, 255))
-        window.blit(lap_time_text, (10,50 + i * 20))
+        lap_time_text = font.render(str(i+1) + ' - ' + format_time(time), True , (255, 255, 255))
+        window.blit(lap_time_text, (10,70 + i * 20))
+    
+    # Show Running Time
+    running_time_text = font.render("RUNNING TIME: " + format_time(running_time), True, (255, 255, 255))
+    window.blit(running_time_text, (10, 50))
 
     if state == 'title screen':
         title_screen_rect = title_screen_image.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
         window.blit(title_screen_image, title_screen_rect)
+    
+    if state == 'finish_screen':
+        finish_screen_rect = finish_screen_image.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+        running_time_text = font.render("RUNNING TIME: " + format_time(running_time), True, (242, 13, 13))
+        window.blit(finish_screen_image, finish_screen_rect)
+        window.blit(running_time_text, (250, 270))
+        for i, time in enumerate(lap_times):
+            lap_time_text = font.render(str(i+1) + ' - ' + format_time(time), True , (242, 13, 13))
+            window.blit(lap_time_text, (320,290 + i * 20))
+        instructions_text = font.render("Press ESC to return to title screen", True, (242, 13, 13))
+        window.blit(instructions_text, (235, 370))
+
 
     # Update the screen
     pygame.display.update()
@@ -192,8 +218,6 @@ while state != 'quit':
     
 pygame.quit()
 quit()
-
-
 
 
 
