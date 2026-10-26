@@ -7,7 +7,7 @@ SCREEN_HEIGHT = 600
 
 pygame.init()
 window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption('Loading image')
+pygame.display.set_caption('Speed')
 image = pygame.image.load('red_car_small.png')
 track_image = pygame.image.load('race_track.png')
 car_acceleration = 500
@@ -177,8 +177,7 @@ quit()
 
 
 
-# Timer 
-# Start and finish line 
+
 
 
 
