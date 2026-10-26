@@ -5,6 +5,8 @@ TARGET_FPS = 60
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
+DEBUG = False
+
 pygame.init()
 window = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Speed')
@@ -130,33 +132,35 @@ while running:
     car_rect = image.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
     window.blit(image, car_rect)
 
-    # Show FPS
-    fps_text = font.render("FPS:  " + str(round(clock.get_fps(), 2)), True, (255, 255, 255))
-    window.blit( fps_text, (10, 10))
-
-    # Show Speed
-    speed_text = font.render("SPEED:  " + str(round(speed, 2)), True, (255, 255, 255))
-    window.blit(speed_text, (10, 30))
-
-    # Show Rotation
-    rotation_text = font.render("ROTATION:  " + str(round(rotation, 2)), True, (255, 255, 255))
-    window.blit(rotation_text, (10, 50))
-
-    # Show Steering Angle
-    steering_angle_text = font.render("STEERING ANGLE:  " + str(round(steering_angle, 2)), True, (255, 255, 255))
-    window.blit(steering_angle_text, (10, 70))
-
-    # Show Terrain 
-    terrain_text = font.render("TERRAIN " + terrain, True, (255, 255, 255))
-    window.blit(terrain_text, (10, 90))
-
     # Show Laps
     laps_text = font.render("LAPS " + str(laps) + "/" + str(max_laps), True, (255, 255, 255))
-    window.blit(laps_text, (10, 110))
+    window.blit(laps_text, (10, 10))
 
     # Show Sector
     sector_text = font.render("SECTOR " + str(sector), True, (255, 255, 255))
-    window.blit(sector_text, (10, 130))
+    window.blit(sector_text, (10, 30))
+
+    if DEBUG:
+        # Show FPS
+        fps_text = font.render("FPS:  " + str(round(clock.get_fps(), 2)), True, (255, 255, 255))
+        window.blit( fps_text, (10, 50))
+
+        # Show Speed
+        speed_text = font.render("SPEED:  " + str(round(speed, 2)), True, (255, 255, 255))
+        window.blit(speed_text, (10, 70))
+
+        # Show Rotation
+        rotation_text = font.render("ROTATION:  " + str(round(rotation, 2)), True, (255, 255, 255))
+        window.blit(rotation_text, (10, 90))
+
+        # Show Steering Angle
+        steering_angle_text = font.render("STEERING ANGLE:  " + str(round(steering_angle, 2)), True, (255, 255, 255))
+        window.blit(steering_angle_text, (10, 110))
+
+        # Show Terrain 
+        terrain_text = font.render("TERRAIN " + terrain, True, (255, 255, 255))
+        window.blit(terrain_text, (10, 130))
+
 
     # Show Lap Times
     for i, time in enumerate(lap_times):
